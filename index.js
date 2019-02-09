@@ -8,6 +8,8 @@ AWS.config.loadFromPath('./config/AWS_Keys.json');
 app.use(bodyParser.json());
 
 require('./routes/TimeSliced')(app, AWS);
+require('./routes/getFaceID')(app, AWS);
+require('./routes/getImages')(app, AWS);
 
 app.listen(port, function() {
 	console.log(`Server on ${port}`);

@@ -7,6 +7,7 @@ module.exports = (app, AWS) => {
 		let { body } = req;
 		let { time1, time2 } = body;
 
+		AWS.config.update({region: 'us-east-1'});
 		s3 = new AWS.S3({apiVersion: '2019-02-09'});
 		s3.listObjects(bucketParams, function(err, data) {
 		  if (err) {
