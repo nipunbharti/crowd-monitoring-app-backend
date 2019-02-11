@@ -12,8 +12,10 @@
   "license": "ISC",
   "dependencies": {
     "aws-sdk": "^2.400.0",
+    "blob-to-base64": "^1.0.1",
     "body-parser": "^1.18.3",
     "express": "^4.16.4",
+    "filereader": "^0.10.3",
     "moment": "^2.24.0",
     "mongoose": "^5.3.11",
     "uuid": "^3.3.2"

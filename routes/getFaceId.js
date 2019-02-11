@@ -8,7 +8,7 @@ module.exports = (app, AWS) => {
 	app.post('/getFaceID', (req, res) => {
 		let { body } = req;
 		let { imageName } = body;
-		let imagename = "090220191120.png";
+		// let imagename = "090220191120.png";
 
 		AWS.config.update({region: 'us-east-2'});
 		let rekognition = new AWS.Rekognition();
@@ -18,7 +18,7 @@ module.exports = (app, AWS) => {
 		  	console.log(data);
 		  	//prune using image name
 		  	let prunedData = data.Faces.filter(function(record) {
-		  		return record.ExternalImageId == imagename;
+		  		return record.ExternalImageId == imageName;
 		  	});
 		  	return res.send(prunedData);
 		  }    

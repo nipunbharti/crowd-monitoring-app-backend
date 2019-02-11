@@ -1,3 +1,20 @@
+async function getObject(key) {
+	let params = {
+		Bucket: 'cromdev',
+		Key: key
+	};
+	let comp = await s3.getObject(params).promise();
+	let base64 = await bTB64(comp.Body);
+	comp["Body"] = base64;
+	comp["name"] = key;
+	return comp;
+}
+
+bTB64 = async (blob) => {
+	var base64Image = await new Buffer( blob, 'binary' ).toString('base64');
+	return base64Image;
+}
+
 module.exports = (app, AWS) => {
 	let bucketParams = {
 		Bucket: 'cromdev'
@@ -8,6 +25,8 @@ module.exports = (app, AWS) => {
 		let { faceID } = body;
 		let { externalID } = body;
 		console.log(body);
+		AWS.config.update({region: 'us-east-1'});
+		s3 = new AWS.S3({apiVersion: '2019-02-09'});
 		AWS.config.update({region: 'us-east-2'});
 		let rekognition = new AWS.Rekognition();
 		let params = {
@@ -23,12 +42,19 @@ module.exports = (app, AWS) => {
 		  	let currentLength = 0;
 		  	let FinalLength = data.FaceMatches.length;
 		  	prunedData.push(externalID);
-		  	data.FaceMatches.forEach(function(record) {
+		  	data.FaceMatches.forEach(async function(record) {
 		  		console.log(record);
 		  		prunedData.push(record.Face.ExternalImageId)
 		  		currentLength++;
-		  		if(currentLength == FinalLength)
-		  			return res.send(prunedData);		
+		  		if(currentLength == FinalLength) {
+		  			let returnedData = [];
+		  			for(let i=0;i<prunedData.length;i++) {
+						let res = await getObject(prunedData[i]);
+						returnedData.push(res);
+					}		
+					console.log(returnedData);
+					return res.send(returnedData);
+				}
 		  	})
 		  	
 		  }    

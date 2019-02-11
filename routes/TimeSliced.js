@@ -1,4 +1,5 @@
 const moment = require('moment');
+var FileReader = require('filereader')
 
 async function getObject(key) {
 	let params = {
@@ -6,8 +7,15 @@ async function getObject(key) {
 		Key: key
 	};
 	let comp = await s3.getObject(params).promise();
+	let base64 = await bTB64(comp.Body);
+	comp["Body"] = base64;
 	comp["name"] = key;
 	return comp;
+}
+
+bTB64 = async (blob) => {
+	var base64Image = await new Buffer( blob, 'binary' ).toString('base64');
+	return base64Image;
 }
 
 module.exports = (app, AWS) => {
@@ -16,12 +24,13 @@ module.exports = (app, AWS) => {
 	};
 
 	app.get('/timeSlicedImages', (req, res) => {
+		console.log('Hit')
 		// let { body } = req;
 		// let { time1, time2 } = body;
 
 		AWS.config.update({region: 'us-east-1'});
 		s3 = new AWS.S3({apiVersion: '2019-02-09'});
-		s3.listObjects(bucketParams,async function(err, data) {
+		s3.listObjects(bucketParams, async function(err, data) {
 		  if (err) {
 		    console.log("Error", err);
 		  } else {
@@ -30,7 +39,7 @@ module.exports = (app, AWS) => {
 			// let date1 = moment(time1, 'DDMMYYYYHHmm').format('DDMMYYYYHHmm');
 			// let date2 = moment(time2, 'DDMMYYYYHHmm').format('DDMMYYYYHHmm');
 			// console.log(date1, date2);
-			// let prunedData = data.Contents.map(data => data.Key.slice()); 
+			// let prunedData = data.Contents.map(data => data.Key.slice());
 			let namedData = data.Contents.map(data => data.Key);
 			let returnedData = [];
 			for(let i=0;i<namedData.length;i++) {
