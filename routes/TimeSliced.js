@@ -23,10 +23,10 @@ module.exports = (app, AWS) => {
 		Bucket: 'cromdev'
 	};
 
-	app.get('/timeSlicedImages', (req, res) => {
+	app.post('/timeSlicedImages', (req, res) => {
 		console.log('Hit')
-		// let { body } = req;
-		// let { time1, time2 } = body;
+		let { body } = req;
+		let { time1, time2 } = body;
 
 		AWS.config.update({region: 'us-east-1'});
 		s3 = new AWS.S3({apiVersion: '2019-02-09'});
@@ -34,20 +34,23 @@ module.exports = (app, AWS) => {
 		  if (err) {
 		    console.log("Error", err);
 		  } else {
-		  	var i=0;
-		  	// To be done
-			// let date1 = moment(time1, 'DDMMYYYYHHmm').format('DDMMYYYYHHmm');
-			// let date2 = moment(time2, 'DDMMYYYYHHmm').format('DDMMYYYYHHmm');
-			// console.log(date1, date2);
+		  	// var i=0;
+		 	// To be done
+			let date1 = moment(time1, 'DDMMYYYYHHmm').format('DDMMYYYYHHmm');
+			let date2 = moment(time2, 'DDMMYYYYHHmm').format('DDMMYYYYHHmm');
+			console.log(date1, date2);
+			let newData = data.Contents.map(data => moment(data.LastModified, 'DDMMYYYYHHmm').utcOffset('+0000').format('DDMMYYYYHHmm'));
+			let prunedData = newData.map(data => moment(data).isBetween(date2, date1));
+			console.log("New", prunedData);
 			// let prunedData = data.Contents.map(data => data.Key.slice());
-			let namedData = data.Contents.map(data => data.Key);
-			let returnedData = [];
-			for(let i=0;i<namedData.length;i++) {
-				let res = await getObject(namedData[i]);
-				returnedData.push(res);
-			}
-			console.log(returnedData);
-			return res.send(returnedData);
+			// let namedData = data.Contents.map(data => data.Key);
+			// let returnedData = [];
+			// for(let i=0;i<namedData.length;i++) {
+			// 	let res = await getObject(namedData[i]);
+			// 	returnedData.push(res);
+			// }
+			// console.log(returnedData);
+			return res.send(data);
 		  }
 		});
 	})	
