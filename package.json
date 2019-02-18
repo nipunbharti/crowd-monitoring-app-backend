@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "async-parallel": "^1.2.3",
     "aws-sdk": "^2.400.0",
     "blob-to-base64": "^1.0.1",
     "body-parser": "^1.18.3",

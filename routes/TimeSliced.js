@@ -1,5 +1,6 @@
 const moment = require('moment');
-var FileReader = require('filereader')
+var FileReader = require('filereader');
+const Parallel = require('async-parallel');
 
 async function getObject(key) {
 	let params = {
@@ -34,23 +35,22 @@ module.exports = (app, AWS) => {
 		  if (err) {
 		    console.log("Error", err);
 		  } else {
-		  	// var i=0;
-		 	// To be done
 			let date1 = moment(time1, 'DDMMYYYYHHmm').format('DDMMYYYYHHmm');
 			let date2 = moment(time2, 'DDMMYYYYHHmm').format('DDMMYYYYHHmm');
 			console.log(date1, date2);
 			let newData = data.Contents.map(data => moment(data.LastModified, 'DDMMYYYYHHmm').utcOffset('+0000').format('DDMMYYYYHHmm'));
-			let prunedData = newData.map(data => moment(data).isBetween(date2, date1));
-			console.log("New", prunedData);
-			// let prunedData = data.Contents.map(data => data.Key.slice());
-			// let namedData = data.Contents.map(data => data.Key);
-			// let returnedData = [];
-			// for(let i=0;i<namedData.length;i++) {
-			// 	let res = await getObject(namedData[i]);
-			// 	returnedData.push(res);
-			// }
-			// console.log(returnedData);
-			return res.send(data);
+			let prunedData1 = newData.filter(data => data>=date1 && data<=date2);
+			let prunedData2 = data.Contents.filter(x => prunedData1.includes(moment(x.LastModified, 'DDMMYYYYHHmm').utcOffset('+0000').format('DDMMYYYYHHmm')))
+			let namedData = prunedData2.map(data => data.Key);
+			console.log(prunedData2);
+			let returnedData = [];
+			let res1 = await (async function() {
+				await Parallel.each(namedData, async value => {
+					let res = await getObject(value);
+					returnedData.push(res);
+				})
+			})();
+			return res.send(returnedData);
 		  }
 		});
 	})	
