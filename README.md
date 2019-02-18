@@ -1,6 +1,6 @@
 ## Node server for crowd analysis app
 
-This app has three APIs
+<!-- This app has three APIs
 - ```/face_count```
 
    Returns the face count in the latest image of the MongoDB
@@ -11,4 +11,4 @@ This app has three APIs
    
 - ```/face_match```
 
-   Returns the name of the people given the image name
+   Returns the name of the people given the image name -->
