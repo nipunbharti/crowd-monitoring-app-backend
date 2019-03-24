@@ -20,7 +20,6 @@ async function getObject(key) {
 }
 
 async function getCroppedFace(value) {
-	console.log(value);
 	const left = Math.floor(value.BoundingBox.Left*image_width), top = Math.floor(value.BoundingBox.Top*image_height), width = Math.floor(value.BoundingBox.Width*image_width), height = Math.floor(value.BoundingBox.Height*image_height);
 	let image = await sharp(imageBlob).extract({ left, top, width, height })
 	.toBuffer({resolveWithObject: true})

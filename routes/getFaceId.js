@@ -25,7 +25,7 @@ async function getCroppedFace(value) {
 	let image = await sharp(imageBlob).extract({ left, top, width, height })
 	.toBuffer({resolveWithObject: true})
 	let base64 = await bTB64(image.data);
-	let newImage = {body: base64, FaceId: value.FaceId, ExternalImageId: value.ExternalImageId}
+	let newImage = {body: base64, FaceId: value.FaceId, ExternalImageId: value.ExternalImageId, BoundingBox: value.BoundingBox}
 	return newImage;
 }
 
@@ -40,8 +40,9 @@ module.exports = (app, AWS) => {
 		let { body } = req;
 		let { imageName } = body;
 		// let imagename = "090220191120.png";
+		console.log(imageName);
 		AWS.config.update({region: 'us-east-1'});
-		s3 = new AWS.S3({apiVersion: '2019-02-09'});
+		s3 = new AWS.S3({apiVersion: '2019-03-24'});
 		let image = await getObject(imageName);
 		AWS.config.update({region: 'us-east-2'});
 		let rekognition = new AWS.Rekognition();
@@ -52,6 +53,7 @@ module.exports = (app, AWS) => {
 		  	let prunedData = data.Faces.filter(function(record) {
 		  		return record.ExternalImageId == imageName;
 		  	});
+		  	console.log(prunedData);
 		  	let returnedData = [];
 		  	let res1 = await (async function(){
 				await Parallel.each(prunedData, async value => {

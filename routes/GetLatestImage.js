@@ -30,9 +30,9 @@ module.exports = (app, AWS) => {
 		  } else {
 		  	let recvievedData = data.Contents;
 		  	recvievedData.sort((a, b) => {
-		  		a.LastModified > b.LastModified
+		  		return new Date(b.LastModified) - new Date(a.LastModified);
 		  	})
-		  	let finalRes = await getObject(recvievedData[recvievedData.length-1].Key)
+		  	let finalRes = await getObject(recvievedData[0].Key)
 		  	// let finalRes = await convertBlobToBase64(recvievedData[recvievedData.length-1])
 		  	// let image = sharp()
 			return res.send(finalRes);
