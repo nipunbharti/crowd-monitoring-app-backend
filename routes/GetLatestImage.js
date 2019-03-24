@@ -21,7 +21,7 @@ module.exports = (app, AWS) => {
 	};
 
 	app.get('/getLatestImage', (req, res) => {
-
+		console.log('Hit on get latest image')
 		AWS.config.update({region: 'us-east-1'});
 		s3 = new AWS.S3({apiVersion: '2019-02-09'});
 		s3.listObjects(bucketParams, async function(err, data) {
