@@ -24,7 +24,6 @@ module.exports = (app, AWS) => {
 		let { body } = req;
 		let { faceID } = body;
 		let { externalID } = body;
-		console.log(body);
 		AWS.config.update({region: 'us-east-1'});
 		s3 = new AWS.S3({apiVersion: '2019-02-09'});
 		AWS.config.update({region: 'us-east-2'});
@@ -41,9 +40,11 @@ module.exports = (app, AWS) => {
 		  	let prunedData = [];
 		  	let currentLength = 0;
 		  	let FinalLength = data.FaceMatches.length;
+		  	if(currentLength == 0 && FinalLength == 0) {
+		  		return res.send([])
+		  	}
 		  	prunedData.push(externalID);
 		  	data.FaceMatches.forEach(async function(record) {
-		  		console.log(record);
 		  		prunedData.push(record.Face.ExternalImageId)
 		  		currentLength++;
 		  		if(currentLength == FinalLength) {
@@ -52,7 +53,6 @@ module.exports = (app, AWS) => {
 						let res = await getObject(prunedData[i]);
 						returnedData.push(res);
 					}		
-					console.log(returnedData);
 					return res.send(returnedData);
 				}
 		  	})

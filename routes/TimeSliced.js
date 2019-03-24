@@ -25,7 +25,6 @@ module.exports = (app, AWS) => {
 	};
 
 	app.post('/timeSlicedImages', (req, res) => {
-		console.log('Hit')
 		let { body } = req;
 		let { time1, time2 } = body;
 
@@ -37,12 +36,10 @@ module.exports = (app, AWS) => {
 		  } else {
 			let date1 = moment(time1, 'DDMMYYYYHHmm').format('DDMMYYYYHHmm');
 			let date2 = moment(time2, 'DDMMYYYYHHmm').format('DDMMYYYYHHmm');
-			console.log(date1, date2);
-			let newData = data.Contents.map(data => moment(data.LastModified, 'DDMMYYYYHHmm').utcOffset('+0000').format('DDMMYYYYHHmm'));
+			let newData = data.Contents.map(data => moment(data.LastModified, 'DDMMYYYYHHmm').utcOffset('+0530').format('DDMMYYYYHHmm'));
 			let prunedData1 = newData.filter(data => data>=date1 && data<=date2);
-			let prunedData2 = data.Contents.filter(x => prunedData1.includes(moment(x.LastModified, 'DDMMYYYYHHmm').utcOffset('+0000').format('DDMMYYYYHHmm')))
+			let prunedData2 = data.Contents.filter(x => prunedData1.includes(moment(x.LastModified, 'DDMMYYYYHHmm').utcOffset('+0530').format('DDMMYYYYHHmm')))
 			let namedData = prunedData2.map(data => data.Key);
-			console.log(prunedData2);
 			let returnedData = [];
 			let res1 = await (async function() {
 				await Parallel.each(namedData, async value => {

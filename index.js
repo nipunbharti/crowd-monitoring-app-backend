@@ -10,6 +10,9 @@ app.use(bodyParser.json());
 require('./routes/TimeSliced')(app, AWS);
 require('./routes/getFaceID')(app, AWS);
 require('./routes/getImages')(app, AWS);
+require('./routes/TestApi')(app, AWS);
+require('./routes/GetLatestImage')(app, AWS);
+require('./routes/GetCroppedImages')(app, AWS);
 
 app.listen(port, function() {
 	console.log(`Server on ${port}`);
