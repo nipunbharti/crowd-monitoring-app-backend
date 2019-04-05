@@ -7,8 +7,8 @@ const config = require('./config/dev');
 
 const app = express();
 const port = process.env.PORT || 8000;
-app.use(bodyParser.json());
-mongoose.connect(config.mongoURI);
+app.use(bodyParser.json({limit: '10mb', extended: true}));
+mongoose.connect(config.mongoURI, { useNewUrlParser: true });
 
 require('./routes/TimeSliced')(app, AWS);
 require('./routes/GetFaceID')(app, AWS);

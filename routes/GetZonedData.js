@@ -24,7 +24,7 @@ module.exports = (app, AWS) => {
 		AWS.config.update({region: 'us-east-1'});
 		s3 = new AWS.S3({apiVersion: '2019-02-09'});
 
-		ZonedSchema.find({flag: false}, async (err, data) => {
+		ZonedSchema.find({ flag: false }, async (err, data) => {
 			if(err) throw err;
 			let returnedData = [];
 			let res1 = await (async function() {

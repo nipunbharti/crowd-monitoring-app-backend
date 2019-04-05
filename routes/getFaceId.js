@@ -21,7 +21,11 @@ bTB64 = async (blob) => {
 }
 
 async function getCroppedFace(value) {
-	const left = Math.floor(value.BoundingBox.Left*image_width), top = Math.floor(value.BoundingBox.Top*image_height), width = Math.floor(value.BoundingBox.Width*image_width), height = Math.floor(value.BoundingBox.Height*image_height);
+	console.log(value);
+	const left = value.BoundingBox.Left > 0 ? Math.floor(value.BoundingBox.Left*image_width) : 0;
+	const top = value.BoundingBox.Top > 0 ? Math.floor(value.BoundingBox.Top*image_height) : 0;
+	const width =  Math.floor(value.BoundingBox.Width*image_width);
+	const height = Math.floor(value.BoundingBox.Height*image_height);
 	let image = await sharp(imageBlob).extract({ left, top, width, height })
 	.toBuffer({resolveWithObject: true})
 	let base64 = await bTB64(image.data);
@@ -53,12 +57,14 @@ module.exports = (app, AWS) => {
 		  	let prunedData = data.Faces.filter(function(record) {
 		  		return record.ExternalImageId == imageName;
 		  	});
-		  	console.log(prunedData);
+
 		  	let returnedData = [];
 		  	let res1 = await (async function(){
 				await Parallel.each(prunedData, async value => {
-					let res2 = await getCroppedFace(value);
-					returnedData.push(res2);
+					if(value.BoundingBox.Left>0 && value.BoundingBox.Top>0) {
+						let res2 = await getCroppedFace(value);
+						returnedData.push(res2);
+					}
 				})
 			})();
 			return res.send(returnedData);
