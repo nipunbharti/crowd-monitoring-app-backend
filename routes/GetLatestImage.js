@@ -21,21 +21,25 @@ module.exports = (app, AWS) => {
 	};
 
 	app.get('/getLatestImage', (req, res) => {
-		console.log('Hit on get latest image')
 		AWS.config.update({region: 'us-east-1'});
 		s3 = new AWS.S3({apiVersion: '2019-02-09'});
 		s3.listObjects(bucketParams, async function(err, data) {
 		  if (err) {
 		    console.log("Error", err);
 		  } else {
-		  	let recvievedData = data.Contents;
-		  	recvievedData.sort((a, b) => {
+		  	let cam1 = data.Contents.filter(val => val.Key.includes('1cam'));
+		  	let cam2 = data.Contents.filter(val => val.Key.includes('2cam'));
+		  	cam1.sort((a, b) => {
 		  		return new Date(b.LastModified) - new Date(a.LastModified);
 		  	})
-		  	let finalRes = await getObject(recvievedData[0].Key)
+		  	cam2.sort((a, b) => {
+		  		return new Date(b.LastModified) - new Date(a.LastModified);
+		  	})
+		  	let finalRes1 = await getObject(cam1[0].Key);
+		  	let finalRes2 = await getObject(cam2[0].Key);
 		  	// let finalRes = await convertBlobToBase64(recvievedData[recvievedData.length-1])
 		  	// let image = sharp()
-			return res.send(finalRes);
+			return res.send({cam1: finalRes1, cam2: finalRes2});
 		  }
 		});
 	})	

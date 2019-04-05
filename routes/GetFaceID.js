@@ -21,7 +21,6 @@ bTB64 = async (blob) => {
 }
 
 async function getCroppedFace(value) {
-	console.log(value);
 	const left = value.BoundingBox.Left > 0 ? Math.floor(value.BoundingBox.Left*image_width) : 0;
 	const top = value.BoundingBox.Top > 0 ? Math.floor(value.BoundingBox.Top*image_height) : 0;
 	const width =  Math.floor(value.BoundingBox.Width*image_width);
@@ -44,7 +43,6 @@ module.exports = (app, AWS) => {
 		let { body } = req;
 		let { imageName } = body;
 		// let imagename = "090220191120.png";
-		console.log(imageName);
 		AWS.config.update({region: 'us-east-1'});
 		s3 = new AWS.S3({apiVersion: '2019-03-24'});
 		let image = await getObject(imageName);

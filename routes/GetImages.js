@@ -6,7 +6,6 @@ async function getObject(key) {
 		Key: key
 	};
 	let comp = await s3.getObject(params).promise();
-	console.log(comp);
 	let base64 = await bTB64(comp.Body);
 	comp["Body"] = base64;
 	comp["name"] = key;
@@ -47,14 +46,12 @@ module.exports = (app, AWS) => {
 		  		return res.send([])
 		  	}
 		  	prunedData.push(externalID);
-		  	console.log(prunedData);
 		  	data.FaceMatches.forEach(async function(record) {
 		  		prunedData.push(record.Face.ExternalImageId)
 		  		currentLength++;
 		  		if(currentLength == FinalLength) {
 		  			let returnedData = [];
 		  			for(let i=0;i<prunedData.length;i++) {
-		  				console.log(prunedData[i]);
 						let res = await getObject(prunedData[i]);
 						returnedData.push(res);
 					}
