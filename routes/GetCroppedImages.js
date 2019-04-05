@@ -1,3 +1,4 @@
+const config = require('../config/dev');
 // Hackathon 2
 const sharp = require('sharp');
 const Parallel = require('async-parallel');
@@ -8,7 +9,7 @@ let imageBlob;
 
 async function getObject(key) {
 	let params = {
-		Bucket: 'pdpdev',
+		Bucket: config.bucket,
 		Key: key
 	};
 	let comp = await s3.getObject(params).promise();
@@ -35,7 +36,7 @@ bTB64 = async (blob) => {
 
 module.exports = (app, AWS) => {
 	let bucketParams = {
-		Bucket: 'pdpdev'
+		Bucket: config.bucket
 	};
 
 	app.post('/getCroppedImage', async (req, res) => {

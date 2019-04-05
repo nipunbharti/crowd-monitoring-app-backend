@@ -1,9 +1,10 @@
 const ZonedSchema = require('../models/ZonedData');
 const Parallel = require('async-parallel');
+const config = require('../config/dev');
 
 async function getObject(key) {
 	let params = {
-		Bucket: 'pdpdev',
+		Bucket: config.bucket,
 		Key: key
 	};
 	let comp = await s3.getObject(params).promise();

@@ -1,10 +1,11 @@
 const moment = require('moment');
 var FileReader = require('filereader');
 const Parallel = require('async-parallel');
+const config = require('../config/dev');
 
 async function getObject(key) {
 	let params = {
-		Bucket: 'pdpdev',
+		Bucket: config.bucket,
 		Key: key
 	};
 	let comp = await s3.getObject(params).promise();
@@ -21,7 +22,7 @@ bTB64 = async (blob) => {
 
 module.exports = (app, AWS) => {
 	let bucketParams = {
-		Bucket: 'pdpdev'
+		Bucket: config.bucket
 	};
 
 	app.post('/timeSlicedImages', (req, res) => {

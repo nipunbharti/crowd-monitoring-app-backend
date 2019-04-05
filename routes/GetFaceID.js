@@ -1,3 +1,4 @@
+const config = require('../config/dev');
 // Gives bounding box
 const sharp = require('sharp');
 const Parallel = require('async-parallel');
@@ -7,7 +8,7 @@ let imageBlob;
 
 async function getObject(key) {
 	let params = {
-		Bucket: 'pdpdev',
+		Bucket: config.bucket,
 		Key: key
 	};
 	let comp = await s3.getObject(params).promise();
@@ -34,7 +35,7 @@ async function getCroppedFace(value) {
 
 module.exports = (app, AWS) => {
 	let params = {
-	  CollectionId: 'pdpdev', /* required */
+	  CollectionId: config.collectionName, /* required */
 	  MaxResults: 1000
 	};
 

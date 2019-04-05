@@ -1,8 +1,9 @@
 const moment = require('moment');
+const config = require('../config/dev');
 
 async function getObject(key) {
 	let params = {
-		Bucket: 'pdpdev',
+		Bucket: config.bucket,
 		Key: key
 	};
 	let comp = await s3.getObject(params).promise();
@@ -19,7 +20,7 @@ bTB64 = async (blob) => {
 
 module.exports = (app, AWS) => {
 	let bucketParams = {
-		Bucket: 'pdpdev'
+		Bucket: config.bucket
 	};
 
 	app.post('/getImages', (req, res) => {
@@ -31,7 +32,7 @@ module.exports = (app, AWS) => {
 		AWS.config.update({region: 'us-east-2'});
 		let rekognition = new AWS.Rekognition();
 		let params = {
-		 CollectionId: "pdp_hk1", 
+		 CollectionId: config.collectionName, 
 		 FaceId: faceID, 
 		 FaceMatchThreshold: 80, 
 		 MaxFaces: 100
