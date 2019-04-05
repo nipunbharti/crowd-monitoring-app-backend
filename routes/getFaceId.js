@@ -32,7 +32,7 @@ async function getCroppedFace(value) {
 module.exports = (app, AWS) => {
 	let params = {
 	  CollectionId: 'pdp_hk1', /* required */
-	  MaxResults: 100
+	  MaxResults: 1000
 	};
 
 
