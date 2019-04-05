@@ -1,6 +1,6 @@
 async function getObject(key) {
 	let params = {
-		Bucket: 'cromdev',
+		Bucket: 'pdpdev',
 		Key: key
 	};
 	let comp = await s3.getObject(params).promise();
@@ -17,7 +17,7 @@ bTB64 = async (blob) => {
 
 module.exports = (app, AWS) => {
 	let bucketParams = {
-		Bucket: 'cromdev'
+		Bucket: 'pdpdev'
 	};
 
 	app.get('/getLatestImage', (req, res) => {

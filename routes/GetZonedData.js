@@ -3,7 +3,7 @@ const Parallel = require('async-parallel');
 
 async function getObject(key) {
 	let params = {
-		Bucket: 'cromdev',
+		Bucket: 'pdpdev',
 		Key: key
 	};
 	let comp = await s3.getObject(params).promise();

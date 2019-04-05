@@ -7,7 +7,7 @@ let imageBlob;
 
 async function getObject(key) {
 	let params = {
-		Bucket: 'cromdev',
+		Bucket: 'pdpdev',
 		Key: key
 	};
 	let comp = await s3.getObject(params).promise();
@@ -34,7 +34,7 @@ async function getCroppedFace(value) {
 
 module.exports = (app, AWS) => {
 	let params = {
-	  CollectionId: 'pdp_hk1', /* required */
+	  CollectionId: 'pdpdev', /* required */
 	  MaxResults: 1000
 	};
 
