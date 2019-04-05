@@ -17,6 +17,7 @@ require('./routes/TestApi')(app, AWS);
 require('./routes/GetLatestImage')(app, AWS);
 require('./routes/GetCroppedImages')(app, AWS);
 require('./routes/GetZonedData')(app, AWS);
+require('./routes/GetZonedCount')(app, AWS);
 require('./routes/SetTrue')(app);
 
 app.listen(port, function() {

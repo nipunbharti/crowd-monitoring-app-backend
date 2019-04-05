@@ -4,7 +4,8 @@ const Parallel = require('async-parallel');
 module.exports = (app) => {
 	app.get('/setTrueZone', (req, res) => {
 		ZonedSchema.find({flag: false}, async (err, data) => {
-			await Parallel.each(data, async value => {
+			console.log(data);
+			data.forEach(val => {
 				val.flag = true;
 				val.save();
 			})
