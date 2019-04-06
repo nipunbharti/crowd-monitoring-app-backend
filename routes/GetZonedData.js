@@ -3,15 +3,20 @@ const Parallel = require('async-parallel');
 const config = require('../config/dev');
 
 async function getObject(key) {
-	let params = {
-		Bucket: config.bucket,
-		Key: key
-	};
-	let comp = await s3.getObject(params).promise();
-	let base64 = await bTB64(comp.Body);
-	comp["Body"] = base64;
-	comp["name"] = key;
-	return comp;
+	try {
+		let params = {
+			Bucket: config.bucket,
+			Key: key
+		};
+		let comp = await s3.getObject(params).promise();
+		let base64 = await bTB64(comp.Body);
+		comp["Body"] = base64;
+		comp["name"] = key;
+		return comp;
+	}		
+	catch(err) {
+		return 'IMGNT';
+	}
 }
 
 bTB64 = async (blob) => {
@@ -31,7 +36,9 @@ module.exports = (app, AWS) => {
 			let res1 = await (async function() {
 				await Parallel.each(data, async value => {
 					let res2 = await getObject(value.imageName);
-					returnedData.push(res2);
+					if(res2 != 'IMGNT') {
+						returnedData.push(res2);
+					}
 				})
 			})();
 			return res.send(returnedData);
