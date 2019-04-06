@@ -1,14 +1,10 @@
-## Node server for crowd analysis app
+# Node server for crowd monitoring
 
-<!-- This app has three APIs
-- ```/face_count```
+### Features
 
-   Returns the face count in the latest image of the MongoDB
-   
-- ```/face_metrics```
-
-   Returns the face metrics for all the people in the images taken stored in MongoDB
-   
-- ```/face_match```
-
-   Returns the name of the people given the image name -->
+- Returns image blob given the image name by searching on S3 Bucket
+- Returns cropped faces in an image given the image name using Rekognition
+- Returns all the images with a person in it given the Face ID of that person
+- Returns images with zone alert by fetching image names from MongoDB and using names to fetch images from S3 Bucket
+- Returns latest image from multiple cameras based
+- Cropping of faces and getting images given image name is done in parallel to improve speed
